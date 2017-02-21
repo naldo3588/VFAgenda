@@ -7,20 +7,30 @@ package src;
 
 import bean.ContatoBean;
 import dao.ContatoDAO;
+import factory.ConexaoFactory;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author ronaldo.pedro
  */
-public class JDCadContato extends javax.swing.JDialog {
+public class JFCadContato extends javax.swing.JFrame {
+
+    private java.sql.Connection con;
+    private java.sql.Statement stmtListar;
+    private java.sql.ResultSet rsListar;
 
     /**
-     * Creates new form JDCadContato
+     * Creates new form JFCadContato
      */
-    public JDCadContato(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public JFCadContato() {
         initComponents();
+
     }
 
     /**
@@ -32,8 +42,6 @@ public class JDCadContato extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButtonCancelar = new javax.swing.JButton();
-        jButtonSalvar = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -68,20 +76,17 @@ public class JDCadContato extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaObs = new javax.swing.JTextArea();
+        jTextFieldID = new javax.swing.JTextField();
+        jButtonSalvar = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
+        jButtonAlterar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        jButtonCancelar.setText("Cancelar");
-        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCancelarActionPerformed(evt);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
             }
-        });
-
-        jButtonSalvar.setText("Salvar");
-        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSalvarActionPerformed(evt);
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
             }
         });
 
@@ -102,8 +107,6 @@ public class JDCadContato extends javax.swing.JDialog {
         jComboBoxEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Selecione", "Acre", "Alagoas", "Amapá", "Amazonas", "Bahia", "Ceara", "Distrito Federal", "Espírito Santo", "Goiás", "Maranhão", "Mato Grosso", "Mato Grosso do Sul", "Minas Gerais", "Pará", "Paraíba", "Paraná", "Pernambuco", "Piauí", "Rio de Janeiro", "Rio Grande do Norte", "Rio Grande do Sul", "Rondônia", "Roraima", "Santa Catarina", "São Paulo", "Sergipe", "Tocantins" }));
 
         jLabel8.setText("Pais");
-
-        jTextFieldPais.setText("Brasil");
 
         jLabel9.setText("Telefone");
 
@@ -278,13 +281,38 @@ public class JDCadContato extends javax.swing.JDialog {
 
         jTabbedPane1.addTab("Observações", jPanel3);
 
+        jButtonSalvar.setText("Salvar");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
+
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
+
+        jButtonAlterar.setText("Alterar");
+        jButtonAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAlterarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -297,24 +325,40 @@ public class JDCadContato extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancelar)
-                    .addComponent(jButtonSalvar))
+                    .addComponent(jButtonSalvar)
+                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAlterar))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:
+        salvar();
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
+
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
         // TODO add your handling code here:
+        buscarID();
+        if (!jTextFieldID.getText().isEmpty()) {
+            jButtonSalvar.setVisible(false);
+        } else {
+            jButtonSalvar.setVisible(true);
+            jButtonAlterar.setVisible(false);
+        }
+    }//GEN-LAST:event_formWindowGainedFocus
 
-        salvar();
-
-    }//GEN-LAST:event_jButtonSalvarActionPerformed
+    private void jButtonAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAlterarActionPerformed
+        // TODO add your handling code here:
+        alterar();
+    }//GEN-LAST:event_jButtonAlterarActionPerformed
 
     public void limparCampos() {
 
@@ -338,9 +382,13 @@ public class JDCadContato extends javax.swing.JDialog {
 
     private void salvar() {
 
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = jDateChooserDataNasc.getDate();
+        String str = fmt.format(data);
+
         ContatoBean contato = new ContatoBean();
         contato.setNome(jTextFieldNome.getText());
-        contato.setData_nasc(jDateChooserDataNasc.getDate());
+        contato.setData_nasc(str);
         contato.setEndereco(jTextFieldEndereco.getText());
         contato.setBairro(jTextFieldBairro.getText());
         contato.setCep(jTextFieldCEP.getText());
@@ -352,6 +400,7 @@ public class JDCadContato extends javax.swing.JDialog {
         contato.setTelefone(jTextFieldTelefone.getText());
         contato.setEmail(jTextFieldEmail.getText());
         contato.setSkype(jTextFieldSkype.getText());
+        contato.setSite(jTextFieldSite.getText());
         contato.setObservacao(jTextAreaObs.getText());
 
         ContatoDAO dao = new ContatoDAO();
@@ -359,6 +408,86 @@ public class JDCadContato extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(rootPane, "Contato '" + jTextFieldNome.getText() + "' cadastrado com Sucesso!!!");
         limparCampos();
         jTextFieldNome.requestFocus();
+    }
+
+    private void alterar() {
+
+        try {
+
+            SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            Date data = jDateChooserDataNasc.getDate();
+            String str = fmt.format(data);
+
+            ContatoBean contato = new ContatoBean();
+            contato.setNome(jTextFieldNome.getText());
+            contato.setData_nasc(str);
+            contato.setEndereco(jTextFieldEndereco.getText());
+            contato.setBairro(jTextFieldBairro.getText());
+            contato.setCep(jTextFieldCEP.getText());
+            contato.setCidade(jTextFieldCidade.getText());
+            contato.setEstado(jComboBoxEstado.getSelectedItem().toString());
+            contato.setPais(jTextFieldPais.getText());
+            contato.setCelular(jTextFieldCelular.getText());
+            contato.setFax(jTextFieldFax.getText());
+            contato.setTelefone(jTextFieldTelefone.getText());
+            contato.setEmail(jTextFieldEmail.getText());
+            contato.setSkype(jTextFieldSkype.getText());
+            contato.setSite(jTextFieldSite.getText());
+            contato.setObservacao(jTextAreaObs.getText());
+            contato.setId(Integer.parseInt(jTextFieldID.getText()));
+
+            ContatoDAO dao = new ContatoDAO();
+            dao.altera(contato);
+            JOptionPane.showMessageDialog(rootPane, "Contato '" + jTextFieldNome.getText() + "' alterado com Sucesso!!!");
+            limparCampos();
+            jTextFieldNome.requestFocus();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JFCadContato.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void buscarID() {
+        iniciarBD();
+        
+        
+        try {
+            rsListar = stmtListar.executeQuery("select * from cad_contato where id_contato='" + jTextFieldID.getText() + "'");
+            if (rsListar.next()) {
+
+                jTextFieldNome.setText(rsListar.getString(2));
+                jDateChooserDataNasc.setDate(rsListar.getDate(3));
+                jTextFieldEndereco.setText(rsListar.getString(4));
+                jTextFieldBairro.setText(rsListar.getString(5));
+                jTextFieldCEP.setText(rsListar.getString(6));
+                jTextFieldCidade.setText(rsListar.getString(7));
+                jComboBoxEstado.setSelectedItem(rsListar.getString(8));
+                jTextFieldPais.setText(rsListar.getString(9));
+                jTextFieldTelefone.setText(rsListar.getString(10));
+                jTextFieldFax.setText(rsListar.getString(11));
+                jTextFieldCelular.setText(rsListar.getString(12));
+                jTextFieldEmail.setText(rsListar.getString(13));
+                jTextFieldSkype.setText(rsListar.getString(14));
+                jTextFieldSite.setText(rsListar.getString(15));
+                jTextAreaObs.setText(rsListar.getString(16));
+
+            }
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void iniciarBD() {
+        try {
+            con = ConexaoFactory.getConnection();
+            stmtListar = con.createStatement();
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error " + ex.getMessage());
+        }
+    }
+
+    public void recebendo(String recebe) {
+        jTextFieldID.setText(recebe);
     }
 
     /**
@@ -378,32 +507,26 @@ public class JDCadContato extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(JDCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(JDCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(JDCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(JDCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JFCadContato.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                JDCadContato dialog = new JDCadContato(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new JFCadContato().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonSalvar;
     private javax.swing.JComboBox<String> jComboBoxEstado;
@@ -435,6 +558,7 @@ public class JDCadContato extends javax.swing.JDialog {
     private javax.swing.JTextField jTextFieldEmail;
     private javax.swing.JTextField jTextFieldEndereco;
     private javax.swing.JTextField jTextFieldFax;
+    public javax.swing.JTextField jTextFieldID;
     private javax.swing.JTextField jTextFieldNome;
     private javax.swing.JTextField jTextFieldPais;
     private javax.swing.JTextField jTextFieldSite;

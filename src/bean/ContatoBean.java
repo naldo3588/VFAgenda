@@ -13,8 +13,9 @@ import java.util.Date;
  */
 public class ContatoBean {
 
+    int id;
     String nome;
-    Date data_nasc;
+    String data_nasc;
     String endereco;
     String bairro;
     String cep;
@@ -26,7 +27,16 @@ public class ContatoBean {
     String celular;
     String email;
     String skype;
+    String site;
     String observacao;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;
@@ -36,11 +46,11 @@ public class ContatoBean {
         this.nome = nome;
     }
 
-    public Date getData_nasc() {
+    public String getData_nasc() {
         return data_nasc;
     }
 
-    public void setData_nasc(Date data_nasc) {
+    public void setData_nasc(String data_nasc) {
         this.data_nasc = data_nasc;
     }
 
@@ -130,6 +140,14 @@ public class ContatoBean {
 
     public void setSkype(String skype) {
         this.skype = skype;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
     }
 
     public String getObservacao() {

@@ -30,11 +30,11 @@ public class ContatoDAO {
         try {
 
             con = ConexaoFactory.getConnection();
-            String sql = "INSERT INTO cad_contato(nome,data_nasc,endereco,bairro,cep,cidade,estado,pais,telefone,fax,celular,email,skype,observacao) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO cad_contato(nome,data_nasc,endereco,bairro,cep,cidade,estado,pais,telefone,fax,celular,email,skype,site,observacao) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             System.out.println("SQL");
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, contato.getNome());
-            ps.setObject(2, contato.getData_nasc());
+            ps.setString(2, contato.getData_nasc());
             ps.setString(3, contato.getEndereco());
             ps.setString(4, contato.getBairro());
             ps.setString(5, contato.getCep());
@@ -46,7 +46,8 @@ public class ContatoDAO {
             ps.setString(11, contato.getCelular());
             ps.setString(12, contato.getEmail());
             ps.setString(13, contato.getSkype());
-            ps.setString(14, contato.getObservacao());
+            ps.setString(14, contato.getSite());
+            ps.setString(15, contato.getObservacao());
 
             return ps.executeUpdate() != PreparedStatement.EXECUTE_FAILED;
 
@@ -59,21 +60,19 @@ public class ContatoDAO {
         }
     }
 
-//    public boolean altera(FilialBean contato) throws ClassNotFoundException {
-//        try {
-//
-//            con = ConexaoFactory.getConnection();
-//            Statement stmt = con.createStatement();
-//            stmt.executeUpdate("UPDATE cad_contato SET cnpj='"
-//                    + contato.getCnpj()+ "',inscricao_estadual='" + contato.getInscricao_estadual() + "',razao_social='" + contato.getRazao_social() + "',endereco='" + contato.getEndereco() + "',numero='" + contato.getNumero() + "',bairro='" + contato.getBairro() + "',cep='" + contato.getCep() + "',cidade='" + contato.getCidade() + "',telefone='" + contato.getTelefone() + "',uf='" + contato.getUf() + "' WHERE id_contato='" + contato.getId_contato() + "'");
-////            JOptionPane.showMessageDialog(null, " Filial Atualizada com Sucesso!!");
-//
-//        } catch (SQLException e) {
-//            JOptionPane.showMessageDialog(null, e);
-//
-//        }
-//        return true;
-//    }
+    public boolean altera(ContatoBean contato) throws ClassNotFoundException {
+        try {
+
+            con = ConexaoFactory.getConnection();
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate("UPDATE cad_contato SET nome='" + contato.getNome() + "', data_nasc='" + contato.getData_nasc() + "', endereco='" + contato.getEndereco() + "', bairro='" + contato.getBairro() + "', cep='" + contato.getCep() + "', cidade='" + contato.getCidade() + "', estado='" + contato.getEstado() + "', pais='" + contato.getPais() + "', telefone='" + contato.getTelefone() + "', fax='" + contato.getFax() + "', celular='" + contato.getCelular() + "', email='" + contato.getEmail() + "', skype='" + contato.getSkype() + "', site='" + contato.getSite() + "', observacao='" + contato.getObservacao() + "' where id_contato='"+contato.getId()+"'");
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+
+        }
+        return true;
+    }
 //    public boolean inserirDpto(FilialBean contato) {
 //        
 //        try {
