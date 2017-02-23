@@ -80,6 +80,7 @@ public class JFCadContato extends javax.swing.JFrame {
         jButtonSalvar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonAlterar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
@@ -93,6 +94,8 @@ public class JFCadContato extends javax.swing.JFrame {
         jLabel1.setText("Nome");
 
         jLabel2.setText("Data de Nascimento");
+
+        jDateChooserDataNasc.setMinSelectableDate(new java.util.Date(-62135755109000L));
 
         jLabel3.setText("Endereço");
 
@@ -302,6 +305,13 @@ public class JFCadContato extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -310,6 +320,8 @@ public class JFCadContato extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(34, 34, 34)
                 .addComponent(jButtonSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,7 +339,8 @@ public class JFCadContato extends javax.swing.JFrame {
                     .addComponent(jButtonCancelar)
                     .addComponent(jButtonSalvar)
                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonAlterar))
+                    .addComponent(jButtonAlterar)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -359,6 +372,13 @@ public class JFCadContato extends javax.swing.JFrame {
         // TODO add your handling code here:
         alterar();
     }//GEN-LAST:event_jButtonAlterarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            Date data = jDateChooserDataNasc.getDate();
+            String str = fmt.format(data);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     public void limparCampos() {
 
@@ -448,14 +468,17 @@ public class JFCadContato extends javax.swing.JFrame {
 
     private void buscarID() {
         iniciarBD();
-        
-        
+
         try {
+            
+            
+            
             rsListar = stmtListar.executeQuery("select * from cad_contato where id_contato='" + jTextFieldID.getText() + "'");
             if (rsListar.next()) {
-
+                
                 jTextFieldNome.setText(rsListar.getString(2));
-                jDateChooserDataNasc.setDate(rsListar.getDate(3));
+                jDateChooserDataNasc.setDate(null);
+                jDateChooserDataNasc.setDateFormatString(rsListar.getString(3));
                 jTextFieldEndereco.setText(rsListar.getString(4));
                 jTextFieldBairro.setText(rsListar.getString(5));
                 jTextFieldCEP.setText(rsListar.getString(6));
@@ -526,6 +549,7 @@ public class JFCadContato extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonSalvar;

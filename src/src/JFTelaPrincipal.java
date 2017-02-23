@@ -7,11 +7,18 @@ package src;
 
 import bean.ContatoBean;
 import factory.ConexaoFactory;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 
 /**
@@ -61,6 +68,8 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableContatos = new javax.swing.JTable();
+        jTextFieldHora = new javax.swing.JTextField();
+        jTextFieldData = new javax.swing.JTextField();
         jTextFieldID = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jCalendar1 = new com.toedter.calendar.JCalendar();
@@ -96,6 +105,11 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jButtonNovo.setText("Novo");
         jButtonNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -176,15 +190,33 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableContatos);
 
+        jTextFieldHora.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextFieldHora.setEnabled(false);
+
+        jTextFieldData.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextFieldData.setEnabled(false);
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 882, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 854, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+            .addGroup(jPanel9Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -224,8 +256,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Contatos", jPanel1);
@@ -238,14 +269,14 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
+                .addComponent(jCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 838, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 547, Short.MAX_VALUE)
+                .addComponent(jCalendar1, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -283,7 +314,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldLocalizar2, javax.swing.GroupLayout.PREFERRED_SIZE, 712, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton3)
                 .addContainerGap())
         );
@@ -326,7 +357,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                     .addComponent(jButtonEmail3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 502, Short.MAX_VALUE))
+                .addGap(0, 191, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Compromissos", jPanel2);
@@ -370,7 +401,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldLocalizar3, javax.swing.GroupLayout.PREFERRED_SIZE, 712, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addContainerGap())
         );
@@ -416,7 +447,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                     .addComponent(jButtonFiltrar4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 502, Short.MAX_VALUE))
+                .addGap(0, 191, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Anotações", jPanel3);
@@ -497,6 +528,21 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         clickMouse();
 
     }//GEN-LAST:event_jTableContatosMouseClicked
+
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
+        datinha();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void datinha() {
+        Date dataSistema = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("EEEE, d' de 'MMMM' de 'yyyy");
+        jTextFieldData.setText(formato.format(dataSistema));
+
+        Timer timer = new Timer(1000, new hora());
+        timer.start();
+    }
 
     private void clickMouse() {
 
@@ -594,6 +640,28 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         }
     }
 
+//    public void setarDia() {
+//
+//        SimpleDateFormat fmt = new SimpleDateFormat("EEEE, d' de 'MMMM' de 'yyyy");
+//        SimpleDateFormat fmt2 = new SimpleDateFormat("HH:mm:ss");
+//        Date data = new Date(System.currentTimeMillis());
+//        String str = fmt.format(data);
+//        String str2 = fmt2.format(data);
+//
+//        jFormattedTextFieldDia.setText(str);
+//        jFormattedTextFieldHora.setText(str2);
+//
+//    }
+    class hora implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Calendar now = Calendar.getInstance();
+            jTextFieldHora.setText(String.format("%1$tH:%1$tM:%1$tS", now));
+        }
+
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -675,6 +743,8 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTableContatos;
+    private javax.swing.JTextField jTextFieldData;
+    private javax.swing.JTextField jTextFieldHora;
     public javax.swing.JTextField jTextFieldID;
     private javax.swing.JTextField jTextFieldLocalizar2;
     private javax.swing.JTextField jTextFieldLocalizar3;
