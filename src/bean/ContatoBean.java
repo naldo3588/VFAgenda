@@ -29,6 +29,15 @@ public class ContatoBean {
     String skype;
     String site;
     String observacao;
+    String usuario;
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
     public int getId() {
         return id;

@@ -7,11 +7,14 @@ package dao;
 
 import bean.ContatoBean;
 import factory.ConexaoFactory;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,7 +33,7 @@ public class ContatoDAO {
         try {
 
             con = ConexaoFactory.getConnection();
-            String sql = "INSERT INTO cad_contato(nome,data_nasc,endereco,bairro,cep,cidade,estado,pais,telefone,fax,celular,email,skype,site,observacao) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO cad_contato(nome,data_nasc,endereco,bairro,cep,cidade,estado,pais,telefone,fax,celular,email,skype,site,observacao,usuario) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             System.out.println("SQL");
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, contato.getNome());
@@ -48,6 +51,7 @@ public class ContatoDAO {
             ps.setString(13, contato.getSkype());
             ps.setString(14, contato.getSite());
             ps.setString(15, contato.getObservacao());
+            ps.setString(16, contato.getUsuario());
 
             return ps.executeUpdate() != PreparedStatement.EXECUTE_FAILED;
 
@@ -65,7 +69,7 @@ public class ContatoDAO {
 
             con = ConexaoFactory.getConnection();
             Statement stmt = con.createStatement();
-            stmt.executeUpdate("UPDATE cad_contato SET nome='" + contato.getNome() + "', data_nasc='" + contato.getData_nasc() + "', endereco='" + contato.getEndereco() + "', bairro='" + contato.getBairro() + "', cep='" + contato.getCep() + "', cidade='" + contato.getCidade() + "', estado='" + contato.getEstado() + "', pais='" + contato.getPais() + "', telefone='" + contato.getTelefone() + "', fax='" + contato.getFax() + "', celular='" + contato.getCelular() + "', email='" + contato.getEmail() + "', skype='" + contato.getSkype() + "', site='" + contato.getSite() + "', observacao='" + contato.getObservacao() + "' where id_contato='"+contato.getId()+"'");
+            stmt.executeUpdate("UPDATE cad_contato SET nome='" + contato.getNome() + "', data_nasc='" + contato.getData_nasc() + "', endereco='" + contato.getEndereco() + "', bairro='" + contato.getBairro() + "', cep='" + contato.getCep() + "', cidade='" + contato.getCidade() + "', estado='" + contato.getEstado() + "', pais='" + contato.getPais() + "', telefone='" + contato.getTelefone() + "', fax='" + contato.getFax() + "', celular='" + contato.getCelular() + "', email='" + contato.getEmail() + "', skype='" + contato.getSkype() + "', site='" + contato.getSite() + "', observacao='" + contato.getObservacao() + "' where id_contato='" + contato.getId() + "'");
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
@@ -73,6 +77,25 @@ public class ContatoDAO {
         }
         return true;
     }
+
+    public boolean exclui(ContatoBean contato) throws SQLException, ClassNotFoundException {
+        con = ConexaoFactory.getConnection();
+        Statement stmt = con.createStatement();
+
+        try {
+
+            Integer opcao = JOptionPane.showConfirmDialog(null, "Confirma a exclusão?", "Excluir Contato", JOptionPane.OK_CANCEL_OPTION);
+            if (opcao == JOptionPane.YES_OPTION) {
+                stmt.executeUpdate("DELETE FROM cad_contato WHERE id_contato='" + contato.getId() + "'");
+
+            }
+        } catch (HeadlessException | SQLException e) {
+
+        }
+
+        return false;
+    }
+
 //    public boolean inserirDpto(FilialBean contato) {
 //        
 //        try {

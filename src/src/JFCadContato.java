@@ -30,6 +30,8 @@ public class JFCadContato extends javax.swing.JFrame {
      */
     public JFCadContato() {
         initComponents();
+        jTextFieldID.setVisible(false);
+        jTextFieldUsuario.setVisible(false);
 
     }
 
@@ -80,14 +82,19 @@ public class JFCadContato extends javax.swing.JFrame {
         jButtonSalvar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jButtonAlterar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        jTextFieldUsuario = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowFocusListener(new java.awt.event.WindowFocusListener() {
             public void windowGainedFocus(java.awt.event.WindowEvent evt) {
                 formWindowGainedFocus(evt);
             }
             public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
             }
         });
 
@@ -243,7 +250,7 @@ public class JFCadContato extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel14)
-                                .addGap(0, 255, Short.MAX_VALUE))
+                                .addGap(0, 256, Short.MAX_VALUE))
                             .addComponent(jTextFieldSite))))
                 .addContainerGap())
         );
@@ -275,7 +282,7 @@ public class JFCadContato extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,23 +312,16 @@ public class JFCadContato extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(34, 34, 34)
+                .addGap(77, 77, 77)
                 .addComponent(jButtonSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -335,12 +335,14 @@ public class JFCadContato extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonCancelar)
-                    .addComponent(jButtonSalvar)
-                    .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonAlterar)
-                    .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonCancelar)
+                        .addComponent(jButtonSalvar)
+                        .addComponent(jButtonAlterar))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -350,6 +352,7 @@ public class JFCadContato extends javax.swing.JFrame {
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
         // TODO add your handling code here:
         salvar();
+
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
@@ -373,12 +376,9 @@ public class JFCadContato extends javax.swing.JFrame {
         alterar();
     }//GEN-LAST:event_jButtonAlterarActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-         SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-            Date data = jDateChooserDataNasc.getDate();
-            String str = fmt.format(data);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_formWindowClosed
 
     public void limparCampos() {
 
@@ -397,6 +397,7 @@ public class JFCadContato extends javax.swing.JFrame {
         jTextFieldTelefone.setText("");
         jDateChooserDataNasc.setDate(null);
         jComboBoxEstado.setSelectedItem("Selecione");
+        
 
     }
 
@@ -422,6 +423,7 @@ public class JFCadContato extends javax.swing.JFrame {
         contato.setSkype(jTextFieldSkype.getText());
         contato.setSite(jTextFieldSite.getText());
         contato.setObservacao(jTextAreaObs.getText());
+        contato.setUsuario(jTextFieldUsuario.getText());
 
         ContatoDAO dao = new ContatoDAO();
         dao.inserir(contato);
@@ -470,12 +472,10 @@ public class JFCadContato extends javax.swing.JFrame {
         iniciarBD();
 
         try {
-            
-            
-            
+
             rsListar = stmtListar.executeQuery("select * from cad_contato where id_contato='" + jTextFieldID.getText() + "'");
             if (rsListar.next()) {
-                
+
                 jTextFieldNome.setText(rsListar.getString(2));
                 jDateChooserDataNasc.setDate(null);
                 jDateChooserDataNasc.setDateFormatString(rsListar.getString(3));
@@ -492,6 +492,7 @@ public class JFCadContato extends javax.swing.JFrame {
                 jTextFieldSkype.setText(rsListar.getString(14));
                 jTextFieldSite.setText(rsListar.getString(15));
                 jTextAreaObs.setText(rsListar.getString(16));
+                jTextFieldID.setText(rsListar.getString(17));
 
             }
         } catch (Exception e) {
@@ -511,6 +512,9 @@ public class JFCadContato extends javax.swing.JFrame {
 
     public void recebendo(String recebe) {
         jTextFieldID.setText(recebe);
+    }
+    public void recebendo2(String recebe) {
+        jTextFieldUsuario.setText(recebe);
     }
 
     /**
@@ -549,7 +553,6 @@ public class JFCadContato extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonAlterar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonSalvar;
@@ -588,5 +591,6 @@ public class JFCadContato extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldSite;
     private javax.swing.JTextField jTextFieldSkype;
     private javax.swing.JTextField jTextFieldTelefone;
+    public javax.swing.JTextField jTextFieldUsuario;
     // End of variables declaration//GEN-END:variables
 }

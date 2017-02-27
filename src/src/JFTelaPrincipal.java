@@ -6,6 +6,8 @@
 package src;
 
 import bean.ContatoBean;
+import bean.UsuarioBean;
+import dao.ContatoDAO;
 import factory.ConexaoFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,12 +16,16 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.ButtonType;
 import javax.swing.JFrame;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -41,6 +47,8 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         initComponents();
         lookandfell();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        jTextFieldID.setVisible(false);
+        jTextFieldLoginUser.setVisible(false);
     }
 
     /**
@@ -70,7 +78,12 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jTableContatos = new javax.swing.JTable();
         jTextFieldHora = new javax.swing.JTextField();
         jTextFieldData = new javax.swing.JTextField();
+        jTextFieldLoginUser = new javax.swing.JTextField();
+        jButtonLogout = new javax.swing.JButton();
+        jButtonSair = new javax.swing.JButton();
         jTextFieldID = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabelNomeUsuario = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jCalendar1 = new com.toedter.calendar.JCalendar();
         jPanel2 = new javax.swing.JPanel();
@@ -105,6 +118,13 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jMenu6 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -119,6 +139,11 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         });
 
         jButtonExcluir.setText("Excluir");
+        jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExcluirActionPerformed(evt);
+            }
+        });
 
         jButtonAlterar.setText("Alterar");
         jButtonAlterar.addActionListener(new java.awt.event.ActionListener() {
@@ -174,10 +199,7 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
 
         jTableContatos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "Código", "Nome", "Data de nasc", "Endereço", "Bairro", "CEP", "Cidade", "Estado", "País", "Telefone", "Fax", "Celular", "Email", "Skype", "Observações", "Site"
@@ -186,6 +208,12 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jTableContatos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableContatosMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jTableContatosMouseEntered(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTableContatosMousePressed(evt);
             }
         });
         jScrollPane1.setViewportView(jTableContatos);
@@ -196,28 +224,59 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
         jTextFieldData.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jTextFieldData.setEnabled(false);
 
+        jTextFieldLoginUser.setEnabled(false);
+
+        jButtonLogout.setText("Logout");
+        jButtonLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonLogoutActionPerformed(evt);
+            }
+        });
+
+        jButtonSair.setText("Sair");
+        jButtonSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSairActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
         jPanel9.setLayout(jPanel9Layout);
         jPanel9Layout.setHorizontalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 854, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jTextFieldLoginUser, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonLogout)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSair)
                 .addContainerGap())
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel9Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldHora, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldLoginUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonLogout)
+                    .addComponent(jButtonSair))
                 .addContainerGap())
         );
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setText("Bem vindo de Volta: ");
+
+        jLabelNomeUsuario.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabelNomeUsuario.setText(" ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -236,27 +295,32 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jButtonFiltrar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonEmail)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelNomeUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonTodos, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelNomeUsuario)
                     .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Contatos", jPanel1);
@@ -491,9 +555,10 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
 
     private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
 
-        JFCadContato contato = new JFCadContato();
-        contato.setLocationRelativeTo(null);
-        contato.setVisible(true);
+        jFCadContato = new JFCadContato();
+        jFCadContato.setLocationRelativeTo(null);
+        jFCadContato.setVisible(true);
+        jFCadContato.recebendo2(jTextFieldLoginUser.getText());
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
     private void jButtonNovo3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovo3ActionPerformed
@@ -532,8 +597,67 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
+        buscarUser();
         datinha();
     }//GEN-LAST:event_formWindowOpened
+
+    private void jTableContatosMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableContatosMouseEntered
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTableContatosMouseEntered
+
+    private void jTableContatosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableContatosMousePressed
+        // TODO add your handling code here:
+
+
+    }//GEN-LAST:event_jTableContatosMousePressed
+
+    private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+
+        try {
+            // TODO add your handling code here:
+            ContatoBean contato = new ContatoBean();
+            ContatoDAO dao = new ContatoDAO();
+            contato.setId(Integer.parseInt(jTextFieldID.getText()));
+            dao.exclui(contato);
+            buscarnome();
+        } catch (SQLException ex) {
+            Logger.getLogger(JFTelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JFTelaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_jButtonExcluirActionPerformed
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        // TODO add your handling code here:
+        buscarnome();
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
+        // TODO add your handling code here:
+
+        Integer opcao = JOptionPane.showConfirmDialog(null, "Deseja Realmente Sair do Sistema?", "Sair", JOptionPane.OK_CANCEL_OPTION);
+        if (opcao == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        } else {
+
+        }
+    }//GEN-LAST:event_jButtonSairActionPerformed
+
+    private void jButtonLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoutActionPerformed
+        // TODO add your handling code here:
+
+        Integer opcao = JOptionPane.showConfirmDialog(null, "Deseja Realmente Deslogar-se?", "Efetuar Logout", JOptionPane.OK_CANCEL_OPTION);
+        if (opcao == JOptionPane.YES_OPTION) {
+            this.dispose();
+            JFLogin login = new JFLogin();
+            login.setLocationRelativeTo(null);
+            login.setVisible(true);
+        } else {
+
+        }
+    }//GEN-LAST:event_jButtonLogoutActionPerformed
 
     private void datinha() {
         Date dataSistema = new Date();
@@ -556,21 +680,27 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
 
     public void recebendo(String recebe) {
         jTextFieldID.setText(recebe);
+
+    }
+
+    public void recebendo2(String recebe2) {
+        jTextFieldLoginUser.setText(recebe2);
+
     }
 
     private void buscarnome() {
+
+        ((DefaultTableModel) jTableContatos.getModel()).setNumRows(0);
+        ((DefaultTableModel) jTableContatos.getModel()).setNumRows(100);
+
         try {
             ContatoBean contato = new ContatoBean();
             contato.setNome(jTextFieldLocalizarContato.getText());
             iniciarBD();
-            rsListar = stmtListar.executeQuery("SELECT * FROM cad_contato WHERE nome LIKE '%" + contato.getNome() + "%'");
-            if (!rsListar.next()) {
-                JOptionPane.showMessageDialog(null, "Nenhum resultado para esta pesqusa!!");
-                jTextFieldLocalizarContato.requestFocus();
-            } else {
-                rsListar = stmtListar.executeQuery("SELECT * FROM cad_contato WHERE nome LIKE '%" + contato.getNome() + "%'");
-                montarTabela();
-            }
+            rsListar = stmtListar.executeQuery("SELECT * FROM cad_contato WHERE nome LIKE '%" + contato.getNome() + "%' and usuario='" + jTextFieldLoginUser.getText() + "'");
+
+            montarTabela();
+
         } catch (SQLException ex) {
 
         }
@@ -617,6 +747,47 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error " + ex.getMessage());
+        }
+    }
+
+//    private void buscarUser() {
+//
+//        try {
+//
+//            iniciarBD();
+//
+//            rsListar = stmtListar.executeQuery("SELECT * FROM usuario");
+//            setarNomeUser();
+//            System.out.println("src.JFTelaPrincipal.buscarUser()");
+//        } catch (SQLException ex) {
+//
+//        }
+//
+//    }
+//
+//    private void setarNomeUser() {
+//        try {
+//            System.out.println("src.JFTelaPrincipal.setarNomeUser()");
+//            String nome = rsListar.getString("nome");
+//            jLabelNomeUsuario.setText(nome);
+//        } catch (Exception e) {
+//
+//        }
+//
+//    }
+    private void buscarUser() {
+        iniciarBD();
+
+        try {
+
+            rsListar = stmtListar.executeQuery("select * from usuario where login='" + jTextFieldLoginUser.getText() + "'");
+            if (rsListar.next()) {
+
+                jLabelNomeUsuario.setText(rsListar.getString(2));
+
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -714,17 +885,21 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButtonFiltrar2;
     private javax.swing.JButton jButtonFiltrar3;
     private javax.swing.JButton jButtonFiltrar4;
+    private javax.swing.JButton jButtonLogout;
     private javax.swing.JButton jButtonNovo;
     private javax.swing.JButton jButtonNovo1;
     private javax.swing.JButton jButtonNovo3;
+    private javax.swing.JButton jButtonSair;
     private javax.swing.JButton jButtonTodos;
     private javax.swing.JButton jButtonTodos1;
     private javax.swing.JButton jButtonTodos3;
     private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabelNomeUsuario;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -749,5 +924,6 @@ public class JFTelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldLocalizar2;
     private javax.swing.JTextField jTextFieldLocalizar3;
     private javax.swing.JTextField jTextFieldLocalizarContato;
+    private javax.swing.JTextField jTextFieldLoginUser;
     // End of variables declaration//GEN-END:variables
 }
